@@ -10,7 +10,7 @@ RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
 RUN python3 -m ensurepip
 RUN pip3 install --no-cache --upgrade pip setuptools
 
-RUN echo "===> Installing Python..." && \
+RUN echo "===> Installing OpenSSL..." && \
 	apk --update add openssl \
 		ca-certificates && \
 	apk --update add --virtual .build-deps \

@@ -14,7 +14,7 @@ steps:
     settings:
       tags: latest
       dockerfile: Dockerfile
-      repo: rohitmisra44/rohitmisra44/homelab-pipeline-image
+      repo: rohitmisra44/homelab-pipeline-image
       username:
         from_secret: docker_username
       password:

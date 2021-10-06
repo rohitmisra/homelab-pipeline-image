@@ -4,10 +4,14 @@ ENV TERRAFORM_VERSION=0.14.0
 ENV ANSIBLE_VERSION=2.9.6
 ENV BOTO_VERSION=2.49.0
 
+RUN echo "===> Installing Python..."
+ENV PYTHONUNBUFFERED=1
+RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
+RUN python3 -m ensurepip
+RUN pip3 install --no-cache --upgrade pip setuptools
+
 RUN echo "===> Installing Python..." && \
-	apk --update add python \
-		py-pip \
-		openssl \
+	apk --update add openssl \
 		ca-certificates && \
 	apk --update add --virtual .build-deps \
 		python-dev \

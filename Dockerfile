@@ -14,7 +14,7 @@ RUN echo "===> Installing Python..." && \
 	apk --update add openssl \
 		ca-certificates && \
 	apk --update add --virtual .build-deps \
-		python-dev \
+		python3-dev \
 		libffi-dev \
 		openssl-dev \
 		build-base && \

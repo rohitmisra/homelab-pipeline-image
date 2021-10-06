@@ -1,0 +1,31 @@
+---
+kind: pipeline
+type: docker
+name: linux-amd64
+
+platform:
+  arch: amd64
+  os: linux
+
+steps:
+
+  - name: publish
+    image: plugins/docker:18
+    settings:
+      tags: latest
+      dockerfile: Dockerfile
+      repo: rohitmisra44/rohitmisra44/homelab-pipeline-image
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+    when:
+      event:
+        - push
+        - tag
+
+trigger:
+  event:
+    include:
+      - push
+      - pull_request

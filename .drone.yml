@@ -31,6 +31,7 @@ steps:
   - name: setup-buildx
     image: docker:20.10.7
     commands:
+      - apk add --no-cache curl
       - |
         # Install buildx
         mkdir -p ~/.docker/cli-plugins/

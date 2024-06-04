@@ -21,3 +21,44 @@ trigger:
     include:
       - push
       - pull_request
+
+
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: setup-buildx
+    image: docker:20.10.7
+    commands:
+      - |
+        # Install buildx
+        mkdir -p ~/.docker/cli-plugins/
+        curl -sSL https://github.com/docker/buildx/releases/download/v0.5.1/buildx-v0.5.1.linux-amd64 -o ~/.docker/cli-plugins/docker-buildx
+        chmod +x ~/.docker/cli-plugins/docker-buildx
+        docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+        docker buildx create --name multiarch --use
+        docker buildx inspect --bootstrap
+
+  - name: build-and-push
+    image: docker:20.10.7
+    settings:
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+    commands:
+      - |
+        # Define your Docker image name and tag
+        IMAGE_NAME="rohitmisra44/homelab-pipeline-image:v1.2.0"
+        IMAGE_TAG="latest"
+
+        # Build and push multi-arch Docker images
+        docker buildx build \
+          --platform linux/amd64,linux/arm64 \
+          --tag $IMAGE_NAME:$IMAGE_TAG \
+          --push .
+
+trigger:
+  branch:
+    - main

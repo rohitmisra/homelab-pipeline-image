@@ -9,20 +9,19 @@ platform:
 
 steps:
 
-  - name: publish
-    image: plugins/docker:18
+  - name: manifest
+    image: plugins/manifest
     settings:
-      tags: latest
-      dockerfile: Dockerfile
-      repo: rohitmisra44/homelab-pipeline-image
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
-    when:
-      event:
-        - push
-        - tag
+      target: rohitmisra44/homelab-pipeline-image:v1.2.0
+      template: rohitmisra44/homelab-pipeline-image:v1.2.0-OS-ARCH
+      platforms:
+        - linux/amd64
+        - linux/arm
+        - linux/arm64
 
 trigger:
   event:

@@ -60,6 +60,11 @@ steps:
           --tag $IMAGE_NAME:$IMAGE_TAG \
           --push .
 
+services:
+  - name: docker
+    image: docker:20.10.7-dind
+    privileged: true
+
 trigger:
   branch:
     - main

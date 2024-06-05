@@ -8,25 +8,24 @@ ENV BITWARDEN_CLI_VERSION=1.19.1
 ENV PYTHONUNBUFFERED=1
 
 ENV TARGETPLATFORM=$TARGETPLATFORM
-RUN echo "TARGETPLATFORM is set to: $TARGETPLATFORM"
 
 RUN apt-get update && apt-get install -y \
 	curl \
 	unzip
-	# npm \
-	# build-essential \
-    # python3-pip \
-    # ca-certificates \
-    # openssh-client \
-    # jq \
-    # && apt-get install -y --no-install-recommends \
-    # python3-dev \
-    # libffi-dev \
-    # build-essential \
-    # && pip3 install --no-cache --upgrade pip setuptools cffi \
-    # && pip3 install ansible==${ANSIBLE_VERSION} boto3==${BOTO3_VERSION} \
-    # && apt-get clean \
-    # && rm -rf /var/lib/apt/lists/*
+	npm \
+	build-essential \
+    python3-pip \
+    ca-certificates \
+    openssh-client \
+    jq \
+    && apt-get install -y --no-install-recommends \
+    python3-dev \
+    libffi-dev \
+    build-essential \
+    && pip3 install --no-cache --upgrade pip setuptools cffi \
+    && pip3 install ansible==${ANSIBLE_VERSION} boto3==${BOTO3_VERSION} \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # # Install Terraform
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \

@@ -71,28 +71,27 @@ type: docker
 name: default
 
 steps:
-  - name: setup_buildx
-    image: docker:20.10.7
+  - name: setup_qemu
+    image: alpine:3.14
     commands:
-      - docker --version
-      - docker buildx --help
-      - docker buildx create --use
+      - apk add --no-cache qemu-user-static
 
   - name: build_images
     image: docker:20.10.7
     commands:
-      - docker buildx build \
+      - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+      - docker build \
           --platform linux/amd64,linux/arm64 \
-          --tag rohitmisra44/homelab-pipeline-image:1.1.0 \
+          --tag rohitmisra44/homelab-pipeline-image:1.1.0-linux-amd64 \
           --build-arg TARGETPLATFORM=linux/amd64 \
-          --build-arg TAG_SUFFIX=linux-amd64 \
           --build-arg VERSION=1.1.0 \
+          --tag rohitmisra44/homelab-pipeline-image:1.1.0-linux-arm64 \
+          --build-arg TARGETPLATFORM=linux/arm64 \
           --push .
 
   - name: create_manifest
     image: docker:20.10.7
     commands:
-      - docker buildx create --name multiarch --use
       - docker manifest create rohitmisra44/homelab-pipeline-image:1.1.0 \
           rohitmisra44/homelab-pipeline-image:1.1.0-linux-amd64 \
           rohitmisra44/homelab-pipeline-image:1.1.0-linux-arm64

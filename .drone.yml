@@ -32,10 +32,15 @@ steps:
         from_secret: DOCKER_USERNAME
       password:
         from_secret: DOCKER_PASSWORD
+
   - name: manifest
     image: plugins/manifest
     settings:
-      spec: manifest.tmpl
+      target: rohitmisra44/homelab-pipeline-image:v1.2.0
+      template: rohitmisra44/homelab-pipeline-image:v1.2.0-OS-ARCH
+      platforms:
+        - linux/amd64
+        - linux/arm64
       username:
         from_secret: DOCKER_USERNAME
       password:

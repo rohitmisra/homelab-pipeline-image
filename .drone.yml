@@ -11,7 +11,7 @@ steps:
       tags: 1.2.0
       platforms: linux/amd64
       build_args:
-        TARGETPLATFORM: linux/amd64
+        - TARGETPLATFORM: linux/amd64
       auto_tag: true
       username:
         from_secret: DOCKER_USERNAME
@@ -26,7 +26,7 @@ steps:
       tags: 1.2.0
       platforms: linux/arm64
       build_args:
-        TARGETPLATFORM: linux/arm64
+        - TARGETPLATFORM: linux/amd64
       auto_tag: true
       username:
         from_secret: DOCKER_USERNAME

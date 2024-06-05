@@ -3,23 +3,39 @@ type: docker
 name: default
 
 steps:
-  - name: setup-buildx
-    image: plugins/docker
-    commands:
-      - docker buildx create --name multiarch-builder --use
-      - docker buildx inspect --bootstrap
-
-  - name: build-and-push
+  - name: build_amd64
     image: plugins/docker
     settings:
+      dockerfile: Dockerfile
+      repo: rohitmisra44/homelab-pipeline-image
+      tags: 1.2.0
+      platforms: linux/amd64
+      auto_tag: true
       username:
         from_secret: DOCKER_USERNAME
       password:
         from_secret: DOCKER_PASSWORD
-    commands:
-      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-      - docker buildx build --builder mybuilder --platform linux/arm64,linux/amd64 -t rohitmisra44/homelab-pipeline-image:1.2.0 --push .
-      - docker buildx imagetools inspect rohitmisra44/homelab-pipeline-image:1.2.0
+  
+  - name: build_arm64
+    image: plugins/docker
+    settings:
+      dockerfile: Dockerfile
+      repo: rohitmisra44/homelab-pipeline-image
+      tags: 1.2.0
+      platforms: linux/arm64
+      auto_tag: true
+      username:
+        from_secret: DOCKER_USERNAME
+      password:
+        from_secret: DOCKER_PASSWORD
+  - name: manifest
+    image: plugins/manifest
+    settings:
+      spec: manifest.tmpl
+      username:
+        from_secret: DOCKER_USERNAME
+      password:
+        from_secret: DOCKER_PASSWORD
 
 trigger:
   event:

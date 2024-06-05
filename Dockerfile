@@ -29,10 +29,15 @@ RUN apt-get update && apt-get install -y \
     # && rm -rf /var/lib/apt/lists/*
 
 # # Install Terraform
-RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then TERRAFORM_ARCH=linux_amd64; elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then TERRAFORM_ARCH=linux_amd64; fi \
-	&& curl -LO https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_${TERRAFORM_ARCH}.zip \
-	&& unzip terraform_${TERRAFORM_VERSION}_${TERRAFORM_ARCH}.zip -d /usr/local/bin \
-	&& rm terraform_${TERRAFORM_VERSION}_${TERRAFORM_ARCH}.zip
+RUN apt-get update && apt-get install -y curl unzip \
+    && if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
+          TERRAFORM_ARCH=linux_amd64; \
+       elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+          TERRAFORM_ARCH=linux_arm64; \
+       fi \
+    && curl -LO "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_${TERRAFORM_ARCH}.zip" \
+    && unzip "terraform_${TERRAFORM_VERSION}_${TERRAFORM_ARCH}.zip" -d /usr/local/bin \
+    && rm "terraform_${TERRAFORM_VERSION}_${TERRAFORM_ARCH}.zip"
 
 
 # # Install Bitwarden CLI

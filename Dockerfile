@@ -11,7 +11,7 @@ ENV TARGETPLATFORM=$TARGETPLATFORM
 
 RUN apt-get update && apt-get install -y \
 	curl \
-	unzip
+	unzip \
 	npm \
 	build-essential \
     python3-pip \

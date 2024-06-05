@@ -8,7 +8,7 @@ steps:
     settings:
       dockerfile: Dockerfile
       repo: rohitmisra44/homelab-pipeline-image
-      tags: 1.2.0
+      tags: 1.2.0-linux-amd
       platforms: linux/amd64
       build_args:
         - TARGETPLATFORM=linux/amd64
@@ -23,7 +23,7 @@ steps:
     settings:
       dockerfile: Dockerfile
       repo: rohitmisra44/homelab-pipeline-image
-      tags: 1.2.0
+      tags: 1.2.0-linux-arm
       platforms: linux/arm64
       build_args:
         - TARGETPLATFORM=linux/arm64

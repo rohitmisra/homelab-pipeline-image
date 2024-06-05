@@ -4,22 +4,21 @@ name: default
 
 steps:
   - name: setup-buildx
-    image: docker:20.10.7
+    image: docker:20.17.5
     commands:
-      - docker buildx create --driver docker-container --name mybuilder
-      - docker buildx inspect mybuilder --bootstrap
+      - docker buildx create --name multiarch-builder --use
+      - docker buildx inspect --bootstrap
 
   - name: build-and-push
-    image: docker:20.10.7
-    environment:
-      DOCKER_USERNAME: 
+    image: docker:20.17.5
+    settings:
+      username:
         from_secret: DOCKER_USERNAME
-      DOCKER_PASSWORD: 
+      password:
         from_secret: DOCKER_PASSWORD
     commands:
       - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-      - docker buildx use mybuilder
-      - docker buildx build --platform linux/arm64,linux/amd64 -t rohitmisra44/homelab-pipeline-image:1.2.0 --push .
+      - docker buildx build --builder mybuilder --platform linux/arm64,linux/amd64 -t rohitmisra44/homelab-pipeline-image:1.2.0 --push .
       - docker buildx imagetools inspect rohitmisra44/homelab-pipeline-image:1.2.0
 
 trigger:
@@ -30,7 +29,7 @@ trigger:
 
 services:
   - name: docker
-    image: docker:20.10.7-dind
+    image: docker:20.17.5-dind
     environment:
       DOCKER_TLS_CERTDIR: ""
     command:

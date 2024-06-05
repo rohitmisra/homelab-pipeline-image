@@ -45,6 +45,9 @@ steps:
         from_secret: DOCKER_USERNAME
       password:
         from_secret: DOCKER_PASSWORD
+    depends_on:
+      - build_amd64
+      - build_arm64
 
 trigger:
   event:

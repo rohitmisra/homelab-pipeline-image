@@ -80,6 +80,9 @@ steps:
       - apk add --no-cache curl
       - curl -L https://github.com/multiarch/qemu-user-static/releases/download/v6.1.0-2/qemu-arm-static -o /usr/bin/qemu-arm-static
       - chmod +x /usr/bin/qemu-arm-static
+      - docker info
+      - docker ps
+      - ls -l /var/run/docker.sock
 
   - name: build_images
     image: docker:20.10.7

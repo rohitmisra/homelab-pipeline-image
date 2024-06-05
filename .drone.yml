@@ -75,7 +75,8 @@ steps:
     image: docker:20.10.7
     commands:
       - docker --version
-      - docker buildx create --name multiarch --use
+      - docker buildx --help
+      - docker buildx create --use
 
   - name: build_images
     image: docker:20.10.7

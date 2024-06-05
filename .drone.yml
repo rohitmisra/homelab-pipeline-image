@@ -36,8 +36,8 @@ steps:
   - name: manifest
     image: plugins/manifest
     settings:
-      target: rohitmisra44/homelab-pipeline-image:v1.1.0
-      template: rohitmisra44/homelab-pipeline-image:v1.1.0-OS-ARCH
+      target: rohitmisra44/homelab-pipeline-image:1.1.0
+      template: rohitmisra44/homelab-pipeline-image:1.1.0-OS-ARCH
       platforms:
         - linux/amd64
         - linux/arm64

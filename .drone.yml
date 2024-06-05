@@ -12,7 +12,7 @@ steps:
       build_args:
         - TARGETPLATFORM=linux/amd64
       auto_tag: true
-      auto_tag_suffix: linux-amd64
+      auto_tag_suffix: 1.1.0-linux-amd64
       username:
         from_secret: DOCKER_USERNAME
       password:
@@ -27,7 +27,7 @@ steps:
       build_args:
         - TARGETPLATFORM=linux/arm64
       auto_tag: true
-      auto_tag_suffix: linux-arm64
+      auto_tag_suffix: 1.1.0-linux-arm64
       username:
         from_secret: DOCKER_USERNAME
       password:
@@ -36,8 +36,8 @@ steps:
   - name: manifest
     image: plugins/manifest
     settings:
-      target: rohitmisra44/homelab-pipeline-image:v1.2.0
-      template: rohitmisra44/homelab-pipeline-image:v1.2.0-OS-ARCH
+      target: rohitmisra44/homelab-pipeline-image:v1.1.0
+      template: rohitmisra44/homelab-pipeline-image:v1.1.0-OS-ARCH
       platforms:
         - linux/amd64
         - linux/arm64

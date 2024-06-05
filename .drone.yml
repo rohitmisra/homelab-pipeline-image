@@ -4,13 +4,13 @@ name: default
 
 steps:
   - name: setup-buildx
-    image: docker:20.17.5
+    image: plugins/docker
     commands:
       - docker buildx create --name multiarch-builder --use
       - docker buildx inspect --bootstrap
 
   - name: build-and-push
-    image: docker:20.17.5
+    image: plugins/docker
     settings:
       username:
         from_secret: DOCKER_USERNAME
@@ -29,7 +29,7 @@ trigger:
 
 services:
   - name: docker
-    image: docker:20.17.5-dind
+    image: plugins/docker:dind
     environment:
       DOCKER_TLS_CERTDIR: ""
     command:

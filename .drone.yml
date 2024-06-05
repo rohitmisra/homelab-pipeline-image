@@ -1,53 +1,100 @@
+# kind: pipeline
+# type: docker
+# name: default
+
+# steps:
+#   - name: build_amd64
+#     image: plugins/docker
+#     settings:
+#       dockerfile: Dockerfile
+#       repo: rohitmisra44/homelab-pipeline-image
+#       platform: linux/amd64
+#       build_args:
+#         - TARGETPLATFORM=linux/amd64
+#       auto_tag: true
+#       auto_tag_suffix: 1.1.0-linux-amd64
+#       username:
+#         from_secret: DOCKER_USERNAME
+#       password:
+#         from_secret: DOCKER_PASSWORD
+  
+#   - name: build_arm64
+#     image: plugins/docker
+#     settings:
+#       dockerfile: Dockerfile
+#       repo: rohitmisra44/homelab-pipeline-image
+#       platform: linux/arm64
+#       build_args:
+#         - TARGETPLATFORM=linux/arm64
+#       auto_tag: true
+#       auto_tag_suffix: 1.1.0-linux-arm64
+#       username:
+#         from_secret: DOCKER_USERNAME
+#       password:
+#         from_secret: DOCKER_PASSWORD
+
+#   - name: manifest
+#     image: plugins/manifest
+#     settings:
+#       target: rohitmisra44/homelab-pipeline-image:1.1.0
+#       template: rohitmisra44/homelab-pipeline-image:1.1.0-OS-ARCH
+#       platforms:
+#         - linux/amd64
+#         - linux/arm64
+#       username:
+#         from_secret: DOCKER_USERNAME
+#       password:
+#         from_secret: DOCKER_PASSWORD
+#     depends_on:
+#       - build_amd64
+#       - build_arm64
+
+# trigger:
+#   event:
+#     - push
+#   branch:
+#     - main
+
+# services:
+#   - name: docker
+#     image: plugins/docker:dind
+#     environment:
+#       DOCKER_TLS_CERTDIR: ""
+#     command:
+#       - dockerd-entrypoint.sh
+#       - --host=tcp://0.0.0.0:2375
+#       - --host=unix:///var/run/docker.sock
+
+
 kind: pipeline
 type: docker
 name: default
 
 steps:
-  - name: build_amd64
-    image: plugins/docker
-    settings:
-      dockerfile: Dockerfile
-      repo: rohitmisra44/homelab-pipeline-image
-      platform: linux/amd64
-      build_args:
-        - TARGETPLATFORM=linux/amd64
-      auto_tag: true
-      auto_tag_suffix: 1.1.0-linux-amd64
-      username:
-        from_secret: DOCKER_USERNAME
-      password:
-        from_secret: DOCKER_PASSWORD
-  
-  - name: build_arm64
-    image: plugins/docker
-    settings:
-      dockerfile: Dockerfile
-      repo: rohitmisra44/homelab-pipeline-image
-      platform: linux/arm64
-      build_args:
-        - TARGETPLATFORM=linux/arm64
-      auto_tag: true
-      auto_tag_suffix: 1.1.0-linux-arm64
-      username:
-        from_secret: DOCKER_USERNAME
-      password:
-        from_secret: DOCKER_PASSWORD
+  - name: setup_buildx
+    image: docker:20.10.7
+    commands:
+      - docker buildx create --name multiarch --use
 
-  - name: manifest
-    image: plugins/manifest
-    settings:
-      target: rohitmisra44/homelab-pipeline-image:1.1.0
-      template: rohitmisra44/homelab-pipeline-image:1.1.0-OS-ARCH
-      platforms:
-        - linux/amd64
-        - linux/arm64
-      username:
-        from_secret: DOCKER_USERNAME
-      password:
-        from_secret: DOCKER_PASSWORD
-    depends_on:
-      - build_amd64
-      - build_arm64
+  - name: build_images
+    image: docker:20.10.7
+    commands:
+      - docker buildx build \
+          --platform linux/amd64,linux/arm64 \
+          --tag rohitmisra44/homelab-pipeline-image:1.1.0 \
+          --build-arg TARGETPLATFORM=linux/amd64 \
+          --build-arg TAG_SUFFIX=linux-amd64 \
+          --build-arg VERSION=1.1.0 \
+          --push .
+
+  - name: create_manifest
+    image: docker:20.10.7
+    commands:
+      - docker buildx create --name multiarch --use
+      - docker manifest create rohitmisra44/homelab-pipeline-image:1.1.0 \
+          rohitmisra44/homelab-pipeline-image:1.1.0-linux-amd64 \
+          rohitmisra44/homelab-pipeline-image:1.1.0-linux-arm64
+      - docker manifest push rohitmisra44/homelab-pipeline-image:1.1.0
 
 trigger:
   event:
@@ -57,7 +104,7 @@ trigger:
 
 services:
   - name: docker
-    image: plugins/docker:dind
+    image: docker:20.10.7-dind
     environment:
       DOCKER_TLS_CERTDIR: ""
     command:

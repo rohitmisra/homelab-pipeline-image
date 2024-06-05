@@ -8,12 +8,11 @@ steps:
     settings:
       dockerfile: Dockerfile
       repo: rohitmisra44/homelab-pipeline-image
-      tags: 
-        - 1.2.0-linux-amd
       platforms: linux/amd64
       build_args:
         - TARGETPLATFORM=linux/amd64
       auto_tag: true
+      auto_tag_suffix: linux-amd64
       username:
         from_secret: DOCKER_USERNAME
       password:
@@ -24,12 +23,11 @@ steps:
     settings:
       dockerfile: Dockerfile
       repo: rohitmisra44/homelab-pipeline-image
-      tags: 
-        - 1.2.0-linux-arm
       platforms: linux/arm64
       build_args:
         - TARGETPLATFORM=linux/arm64
       auto_tag: true
+      auto_tag_suffix: linux-arm64
       username:
         from_secret: DOCKER_USERNAME
       password:

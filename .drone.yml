@@ -6,20 +6,19 @@ steps:
   - name: setup-buildx
     image: docker:20.10.7
     commands:
-      - docker buildx create --name mybuilder
-      - docker buildx use mybuilder
+      - docker buildx create --use
       - docker buildx inspect --bootstrap
 
   - name: build-and-push
     image: docker:20.10.7
-    settings:
-      username:
+    environment:
+      DOCKER_USERNAME: 
         from_secret: DOCKER_USERNAME
-      password:
+      DOCKER_PASSWORD: 
         from_secret: DOCKER_PASSWORD
     commands:
       - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-      - docker buildx build --builder mybuilder --platform linux/arm64,linux/amd64 -t rohitmisra44/homelab-pipeline-image:1.2.0 --push .
+      - docker buildx build --platform linux/arm64,linux/amd64 -t rohitmisra44/homelab-pipeline-image:1.2.0 --push .
       - docker buildx imagetools inspect rohitmisra44/homelab-pipeline-image:1.2.0
 
 trigger:

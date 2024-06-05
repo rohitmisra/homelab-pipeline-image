@@ -10,6 +10,8 @@ steps:
       repo: rohitmisra44/homelab-pipeline-image
       tags: 1.2.0
       platforms: linux/amd64
+      args:
+        TARGETPLATFORM: linux/amd64
       auto_tag: true
       username:
         from_secret: DOCKER_USERNAME
@@ -23,6 +25,8 @@ steps:
       repo: rohitmisra44/homelab-pipeline-image
       tags: 1.2.0
       platforms: linux/arm64
+      args:
+        TARGETPLATFORM: linux/arm64
       auto_tag: true
       username:
         from_secret: DOCKER_USERNAME

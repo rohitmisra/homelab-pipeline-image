@@ -8,7 +8,7 @@ steps:
     settings:
       dockerfile: Dockerfile
       repo: rohitmisra44/homelab-pipeline-image
-      platforms: linux/amd64
+      platform: linux/amd64
       build_args:
         - TARGETPLATFORM=linux/amd64
       auto_tag: true
@@ -23,7 +23,7 @@ steps:
     settings:
       dockerfile: Dockerfile
       repo: rohitmisra44/homelab-pipeline-image
-      platforms: linux/arm64
+      platform: linux/arm64
       build_args:
         - TARGETPLATFORM=linux/arm64
       auto_tag: true

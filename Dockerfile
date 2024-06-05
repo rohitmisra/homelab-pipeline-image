@@ -29,8 +29,7 @@ RUN apt-get update && apt-get install -y \
     # && rm -rf /var/lib/apt/lists/*
 
 # # Install Terraform
-RUN apt-get update && apt-get install -y curl unzip \
-    && if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
+RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
           TERRAFORM_ARCH=linux_amd64; \
        elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
           TERRAFORM_ARCH=linux_arm64; \

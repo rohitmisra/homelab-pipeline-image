@@ -3,10 +3,12 @@ type: docker
 name: default
 
 steps:
-  - name: setup-qemu
-    image: multiarch/qemu-user-static:register
+  - name: setup-buildx
+    image: docker:20.10.7
     commands:
-      - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+      - docker buildx create --name mybuilder
+      - docker buildx use mybuilder
+      - docker buildx inspect --bootstrap
 
   - name: build-and-push
     image: docker:20.10.7
@@ -15,12 +17,9 @@ steps:
         from_secret: DOCKER_USERNAME
       password:
         from_secret: DOCKER_PASSWORD
-    environment:
-      DOCKER_BUILDKIT: 1
     commands:
-      - docker buildx create --use
-      - docker buildx inspect --bootstrap
-      - docker buildx build --platform linux/arm64,linux/amd64 -t rohitmisra44/homelab-pipeline-image:1.2.0 --push .
+      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - docker buildx build --builder mybuilder --platform linux/arm64,linux/amd64 -t rohitmisra44/homelab-pipeline-image:1.2.0 --push .
       - docker buildx imagetools inspect rohitmisra44/homelab-pipeline-image:1.2.0
 
 trigger:
@@ -38,4 +37,3 @@ services:
       - dockerd-entrypoint.sh
       - --host=tcp://0.0.0.0:2375
       - --host=unix:///var/run/docker.sock
-    privileged: true

@@ -28,7 +28,9 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # # Install Rust
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y && source $HOME/.cargo/env
+RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
+
+ENV PATH="/root/.cargo/bin:${PATH}"
 
 # # Install Terraform
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \

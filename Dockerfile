@@ -27,6 +27,9 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# # Install Rust
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y && source $HOME/.cargo/env
+
 # # Install Terraform
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
           TERRAFORM_ARCH=linux_amd64; \
@@ -38,11 +41,12 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
     && rm "terraform_${TERRAFORM_VERSION}_${TERRAFORM_ARCH}.zip"
 
 
-# # Install Bitwarden CLI
-RUN npm i -g @bitwarden/cli@2023.5.0
+# # Install Bitwarden Secrets Manager CLI
+
+RUN cargo install bws
 
 # # Configure Ansible
 RUN mkdir -p /etc/ansible \
     && echo 'localhost' > /etc/ansible/hosts
 
-ENTRYPOINT ["sh", "-c", "terraform -v && ansible --version && bw --version && /bin/bash"]
+ENTRYPOINT ["sh", "-c", "terraform -v && ansible --version && bws --version && /bin/bash"]
